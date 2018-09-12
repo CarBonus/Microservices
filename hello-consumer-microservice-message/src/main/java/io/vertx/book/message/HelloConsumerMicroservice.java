@@ -38,4 +38,19 @@ public void start() {
  })
  .listen(8082);
 }
+ public MyRestAPIClient(ServiceDiscovery discovery,
+                       Handler<AsyncResult<Void>> completionHandler) {
+  HttpEndpoint.getClient(discovery,
+         new JsonObject().put("name", "my-rest-api"),
+          ar -> {
+            if (ar.failed()) {
+             // No service
+            completionHandler.handle(Future.failedFuture(
+              "No matching services"));
+           } else {
+              client = ar.result();
+              completionHandler.handle(Future.succeededFuture());
+           }
+  });
+}
 }
