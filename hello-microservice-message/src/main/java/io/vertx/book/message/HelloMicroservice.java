@@ -22,4 +22,17 @@ public void start() {
  }
  });
 }
+ ServiceDiscovery discovery = ServiceDiscovery.create(vertx);
+discovery.publish(HttpEndpoint.createRecord(
+    "my-rest-api",
+    "localhost", 8080,
+    "/names"),
+    ar -> {
+      if (ar.succeeded()) {
+        System.out.println("REST API published");
+      } else {
+        System.out.println("Unable to publish the REST API: " +
+             ar.cause().getMessage());
+      }
+    });
 }
